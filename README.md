@@ -22,6 +22,34 @@ Telnet-режим с автоматическим поиском shell, а та�
 поле команды. В отдельных вкладках доступны быстрые команды и настройки ADB, shell-процесса,
 размера шрифта, автопрокрутки и временных меток.
 
+<p align="center">
+  <a href="docs/images/terminal-screen.png">
+    <img src="docs/images/terminal-screen.png" width="720" alt="Главный экран терминала Atlas Terminal">
+  </a>
+</p>
+
+Вкладка «Пресеты» группирует диагностические команды по категориям, а «Настройки» объединяет
+подключение к ADB, локальный shell и параметры отображения терминала.
+
+<table>
+  <tr>
+    <th>Пресеты</th>
+    <th>Настройки</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="docs/images/presets-screen.png">
+        <img src="docs/images/presets-screen.png" alt="Вкладка пресетов Atlas Terminal">
+      </a>
+    </td>
+    <td>
+      <a href="docs/images/settings-screen.png">
+        <img src="docs/images/settings-screen.png" alt="Вкладка настроек Atlas Terminal">
+      </a>
+    </td>
+  </tr>
+</table>
+
 ## Возможности
 
 - подключение к ADB по адресу и порту; готовые режимы Atlas (`5555`), Preface (`7777`) и Custom;
