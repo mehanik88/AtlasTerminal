@@ -1,0 +1,97 @@
+<resources>
+    <string name="app_name">Atlas Terminal</string>
+
+    <!-- Navigation Tabs -->
+    <string name="tab_terminal">Терминал</string>
+    <string name="tab_presets">Пресеты</string>
+    <string name="tab_settings">Настройки</string>
+
+    <!-- ADB Connection -->
+    <string name="section_adb">ADB подключение</string>
+    <string name="adb_helper">ADB helper</string>
+    <string name="adb_helper_description">Подключение к локальному или удаленному adbd</string>
+    <string name="adb_host">Адрес ADB</string>
+    <string name="adb_host_hint">Для ГУ обычно localhost или 127.0.0.1</string>
+    <string name="adb_port">Порт ADB</string>
+    <string name="adb_port_telnet">Telnet: порт определяется автоматически</string>
+    <string name="adb_mode_atlas">Atlas (5555)</string>
+    <string name="adb_mode_preface">Preface (7777)</string>
+    <string name="adb_mode_custom">Custom</string>
+    <string name="adb_mode_telnet">Telnet</string>
+    <string name="action_connect">Подключить</string>
+    <string name="action_disconnect">Отключить</string>
+    <string name="action_reconnect">Переподключить</string>
+
+    <!-- Status Headers -->
+    <string name="adb_connected">ADB подключён (%1$s:%2$d)</string>
+    <string name="adb_connecting">ADB подключается…</string>
+    <string name="adb_disconnected">ADB отключён</string>
+    <string name="adb_error">ADB ошибка: %1$s</string>
+    <string name="status_local_root">Локальный root (%1$s)</string>
+    <string name="status_local_shell">Локальный shell (%1$s)</string>
+
+    <!-- Execution Target / Mode -->
+    <string name="section_target">Цель выполнения</string>
+    <string name="target_adb">ADB Shell</string>
+    <string name="target_local_su_root">Local su root</string>
+    <string name="target_local_su">Local su</string>
+    <string name="target_local_sh">Local sh</string>
+    <string name="target_custom">Свой шелл</string>
+
+    <!-- Prefix Constructor -->
+    <string name="section_prefix_constructor">Конструктор начала запроса</string>
+    <string name="prefix_prepend_mode">Авто-префикс</string>
+    <string name="prefix_insert_mode">Вставка</string>
+    <string name="prefix_none">Без префикса</string>
+    <string name="active_prefix">Префикс: %1$s</string>
+
+    <!-- Terminal Console -->
+    <string name="terminal_console">Консоль</string>
+    <string name="command_input_hint">Введите команду…</string>
+    <string name="action_run">Выполнить</string>
+    <string name="action_send">Отправить</string>
+    <string name="action_clear">Очистить</string>
+    <string name="action_ctrl_c">Ctrl+C</string>
+    <string name="action_copy_all">Копировать всё</string>
+    <string name="action_export">Экспорт лога</string>
+    <string name="action_history">История</string>
+    <string name="terminal_autoscroll">Автопрокрутка</string>
+    <string name="copied_to_clipboard">Скопировано в буфер обмена</string>
+    <string name="log_exported">Лог сохранен: %1$s</string>
+    <string name="process_running">Выполняется…</string>
+    <string name="process_exited">Завершено с кодом %1$d</string>
+    <string name="process_interrupted">Прервано пользователем (SIGINT)</string>
+    <string name="process_timeout">Таймаут выполнения (%1$d сек)</string>
+
+    <!-- Presets -->
+    <string name="section_presets">Быстрые команды для ГУ</string>
+    <string name="category_all">Все</string>
+    <string name="category_system">Система и железо</string>
+    <string name="category_apps">Приложения (PM/AM)</string>
+    <string name="category_media">Аудио и кодеки</string>
+    <string name="category_display">Экран и окно</string>
+    <string name="category_network">Сеть и логи</string>
+    <string name="category_root">Root</string>
+    <string name="category_custom">Мои команды</string>
+    <string name="action_insert">Вставить</string>
+    <string name="action_add_preset">Добавить пресет</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="preset_title">Название команды</string>
+    <string name="preset_command">Команда shell</string>
+    <string name="preset_description">Описание (опционально)</string>
+    <string name="preset_category">Категория</string>
+
+    <!-- Settings -->
+    <string name="section_terminal_settings">Параметры терминала</string>
+    <string name="font_size">Размер шрифта</string>
+    <string name="font_size_small">Мелкий</string>
+    <string name="font_size_normal">Средний</string>
+    <string name="font_size_large">Крупный</string>
+    <string name="max_buffer_lines">Максимум строк в буфере</string>
+    <string name="auto_reconnect">Авто-переподключение ADB</string>
+    <string name="auto_reconnect_desc">Повторять попытку при обрыве связи с adbd</string>
+    <string name="show_timestamps">Показывать время сообщений</string>
+    <string name="custom_shell_path">Путь к кастомному шеллу</string>
+</resources>
