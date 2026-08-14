@@ -27,7 +27,7 @@ object TerminalPresets {
                 PresetItem("sys_free", "Память ОЗУ (free -m)", "free -m", "Использование оперативной памяти"),
                 PresetItem("sys_uptime", "Время работы (uptime)", "uptime", "Время с момента запуска системы и средняя загрузка"),
                 PresetItem("sys_uname", "Ядро Linux (uname -a)", "uname -a", "Версия ядра Linux и архитектура процессора"),
-                PresetItem("sys_top", "Топ процессов (top)", "top -n 1 -m 10", "10 наиболее ресурсоемких процессов прямо сейчас")
+                PresetItem("sys_top", "Топ процессов (top)", "top -b -n 1 -m 10", "10 наиболее ресурсоемких процессов прямо сейчас")
             )
         ),
         PresetCategory(
@@ -99,6 +99,6 @@ object TerminalPresets {
                 isCustom = true
             )
         }
-        return builtIn + custom
+        return custom + builtIn
     }
 }

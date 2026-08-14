@@ -10,8 +10,8 @@ val secureSigningScript = providers.gradleProperty("secure.signing")
     .orNull
     ?.let(rootProject::file)
 val hasReleaseSigning = secureSigningScript?.isFile == true
-val baseVersionCode = 1
-val baseVersionName = "1.0.0"
+val baseVersionCode = 2
+val baseVersionName = "1.0.1"
 
 fun currentGitBranch(): String {
     return runCatching {

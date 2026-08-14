@@ -9,8 +9,6 @@ import org.json.JSONObject
 
 enum class ExecutionTarget(val title: String) {
     ADB_SHELL("ADB Shell"),
-    LOCAL_SU_ROOT("su root"),
-    LOCAL_SU("su"),
     LOCAL_SH("sh"),
     CUSTOM("Custom")
 }

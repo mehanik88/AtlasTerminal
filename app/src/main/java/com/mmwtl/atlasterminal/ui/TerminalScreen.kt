@@ -130,8 +130,6 @@ private fun StatusHeader(state: TerminalUiState) {
                 is AdbConnectionState.Error -> "ADB Ошибка: ${adb.message}" to MaterialTheme.colorScheme.error
             }
         }
-        ExecutionTarget.LOCAL_SU_ROOT -> "Локальный процесс: su root" to MaterialTheme.colorScheme.primary
-        ExecutionTarget.LOCAL_SU -> "Локальный процесс: su" to MaterialTheme.colorScheme.primary
         ExecutionTarget.LOCAL_SH -> "Локальный процесс: sh (/system/bin/sh)" to MaterialTheme.colorScheme.primary
         ExecutionTarget.CUSTOM -> "Кастомный процесс: ${state.customShellPath}" to MaterialTheme.colorScheme.primary
     }
@@ -384,52 +382,42 @@ private fun PrefixConstructorCard(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            // Execution Target Selector
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                TargetButton(
-                    modifier = Modifier.weight(1f),
-                    title = "ADB",
-                    selected = selectedTarget == ExecutionTarget.ADB_SHELL,
-                    onClick = { onTargetChange(ExecutionTarget.ADB_SHELL) }
-                )
-                TargetButton(
-                    modifier = Modifier.weight(1.1f),
-                    title = "su root",
-                    selected = selectedTarget == ExecutionTarget.LOCAL_SU_ROOT,
-                    onClick = { onTargetChange(ExecutionTarget.LOCAL_SU_ROOT) }
-                )
-                TargetButton(
-                    modifier = Modifier.weight(0.9f),
-                    title = "su",
-                    selected = selectedTarget == ExecutionTarget.LOCAL_SU,
-                    onClick = { onTargetChange(ExecutionTarget.LOCAL_SU) }
-                )
-                TargetButton(
-                    modifier = Modifier.weight(0.9f),
-                    title = "sh",
-                    selected = selectedTarget == ExecutionTarget.LOCAL_SH,
-                    onClick = { onTargetChange(ExecutionTarget.LOCAL_SH) }
-                )
-            }
-
-            // Prefix Chips & Mode Switcher
+            // Execution target and prefix mode share one compact row.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
+                Row(
+                    modifier = Modifier.weight(1.2f),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    TargetButton(
+                        modifier = Modifier.weight(1f),
+                        title = "ADB",
+                        selected = selectedTarget == ExecutionTarget.ADB_SHELL,
+                        onClick = { onTargetChange(ExecutionTarget.ADB_SHELL) }
+                    )
+                    TargetButton(
+                        modifier = Modifier.weight(1f),
+                        title = "sh",
+                        selected = selectedTarget == ExecutionTarget.LOCAL_SH,
+                        onClick = { onTargetChange(ExecutionTarget.LOCAL_SH) }
+                    )
+                }
+
                 Text(
+                    modifier = Modifier.weight(0.8f),
                     text = if (activePrefix.isNotBlank() && prefixMode == PrefixMode.PREPEND) {
                         "Префикс: $activePrefix"
                     } else {
-                        "Конструктор префикса:"
+                        "Префикс"
                     },
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -448,8 +436,6 @@ private fun PrefixConstructorCard(
 
             // Horizontal Chips
             val chips = listOf(
-                "su root",
-                "su 0",
                 "sh -c",
                 "nohup",
                 "getprop",

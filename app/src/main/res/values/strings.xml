@@ -33,8 +33,6 @@
     <!-- Execution Target / Mode -->
     <string name="section_target">Цель выполнения</string>
     <string name="target_adb">ADB Shell</string>
-    <string name="target_local_su_root">Local su root</string>
-    <string name="target_local_su">Local su</string>
     <string name="target_local_sh">Local sh</string>
     <string name="target_custom">Свой шелл</string>
 

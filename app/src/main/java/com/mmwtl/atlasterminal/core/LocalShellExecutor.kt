@@ -19,8 +19,6 @@ import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 enum class LocalShellType(val displayName: String) {
-    LOCAL_SU_ROOT("su root"),
-    LOCAL_SU("su"),
     LOCAL_SH("sh"),
     CUSTOM("Custom")
 }
@@ -37,7 +35,7 @@ data class ShellExecutionResult(
 }
 
 class LocalShellExecutor(
-    private val defaultShellType: LocalShellType = LocalShellType.LOCAL_SU_ROOT,
+    private val defaultShellType: LocalShellType = LocalShellType.LOCAL_SH,
     initialCustomShellBinary: String = "/system/bin/sh"
 ) {
     @Volatile
@@ -150,8 +148,6 @@ class LocalShellExecutor(
         stopInteractiveSession()
         try {
             val cmd = when (shellType) {
-                LocalShellType.LOCAL_SU_ROOT -> listOf("su", "root")
-                LocalShellType.LOCAL_SU -> listOf("su")
                 LocalShellType.LOCAL_SH -> listOf("/system/bin/sh", "-i")
                 LocalShellType.CUSTOM -> listOf(customShellBinary.ifBlank { "/system/bin/sh" })
             }
@@ -214,8 +210,6 @@ class LocalShellExecutor(
 
     private fun buildProcessArgs(shellType: LocalShellType, command: String): List<String> {
         return when (shellType) {
-            LocalShellType.LOCAL_SU_ROOT -> listOf("su", "root", "-c", command)
-            LocalShellType.LOCAL_SU -> listOf("su", "-c", command)
             LocalShellType.LOCAL_SH -> listOf("/system/bin/sh", "-c", command)
             LocalShellType.CUSTOM -> listOf(customShellBinary.ifBlank { "/system/bin/sh" }, "-c", command)
         }

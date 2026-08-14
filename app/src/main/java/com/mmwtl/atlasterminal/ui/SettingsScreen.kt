@@ -171,7 +171,7 @@ fun SettingsScreen(
                 onValueChange = onCustomShellPathChange,
                 enabled = !state.isBusy,
                 label = { Text(stringResource(R.string.custom_shell_path)) },
-                supportingText = { Text("По умолчанию /system/bin/sh или su") },
+                supportingText = { Text("По умолчанию /system/bin/sh") },
                 singleLine = true,
                 shape = RoundedCornerShape(8.dp)
             )

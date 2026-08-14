@@ -6,15 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mmwtl.atlasterminal.R
@@ -64,7 +64,30 @@ fun PresetsScreen(
         )
     }
 
-    val categories = listOf("Все", "Система и железо", "Приложения (PM / AM)", "Аудио и медиакодеки", "Экран и окна", "Сеть и логи", "Root", "Мои команды")
+    val builtInCategories = listOf(
+        "Система и железо",
+        "Приложения (PM / AM)",
+        "Аудио и медиакодеки",
+        "Экран и окна",
+        "Сеть и логи",
+        "Root"
+    )
+    val customCategories = state.presets
+        .asSequence()
+        .filter { it.isCustom }
+        .map { it.category.ifBlank { "Мои команды" } }
+        .distinct()
+        .toList()
+    val categories = buildList {
+        add("Мои команды")
+        add("Все")
+        customCategories
+            .filter { it != "Мои команды" }
+            .forEach(::add)
+        builtInCategories
+            .filterNot { it in this }
+            .forEach(::add)
+    }
     val filteredPresets = if (state.selectedCategory == "Все") {
         state.presets
     } else {
@@ -131,9 +154,13 @@ fun PresetsScreen(
             }
         }
 
-        // Preset Items List
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+        // Preset Items Grid
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(filteredPresets, key = { it.id }) { preset ->
@@ -175,15 +202,20 @@ private fun PresetCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
+                    modifier = Modifier.weight(1f),
                     text = preset.title,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = preset.category,
                     fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
@@ -207,14 +239,16 @@ private fun PresetCard(
                     text = preset.command,
                     fontFamily = FontFamily.Monospace,
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
@@ -225,7 +259,7 @@ private fun PresetCard(
                     ),
                     onClick = onRun
                 ) {
-                    Text(stringResource(R.string.action_run), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.action_run), fontSize = 11.sp, fontWeight = FontWeight.Bold)
                 }
 
                 OutlinedButton(
@@ -237,11 +271,12 @@ private fun PresetCard(
                     ),
                     onClick = onInsert
                 ) {
-                    Text(stringResource(R.string.action_insert), fontSize = 12.sp)
+                    Text(stringResource(R.string.action_insert), fontSize = 11.sp)
                 }
 
                 if (onDelete != null) {
                     OutlinedButton(
+                        modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(6.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -249,7 +284,7 @@ private fun PresetCard(
                         ),
                         onClick = onDelete
                     ) {
-                        Text(stringResource(R.string.action_delete), fontSize = 12.sp)
+                        Text(stringResource(R.string.action_delete), fontSize = 11.sp)
                     }
                 }
             }

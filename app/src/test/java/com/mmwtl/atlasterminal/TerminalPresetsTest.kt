@@ -33,5 +33,15 @@ class TerminalPresetsTest {
         assertEquals("Test Macro", foundCustom?.title)
         assertEquals("echo hello", foundCustom?.command)
         assertTrue(foundCustom?.isCustom == true)
+        assertEquals("custom_1", all.first().id)
+    }
+
+    @Test
+    fun topPresetUsesBatchModeForReadableOutput() {
+        val top = TerminalPresets.BUILT_IN_CATEGORIES
+            .flatMap { it.items }
+            .first { it.id == "sys_top" }
+
+        assertEquals("top -b -n 1 -m 10", top.command)
     }
 }

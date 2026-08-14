@@ -84,8 +84,6 @@ class TerminalSessionManager(
 
         val targetLabel = when (target) {
             ExecutionTarget.ADB_SHELL -> "adb"
-            ExecutionTarget.LOCAL_SU_ROOT -> "su root"
-            ExecutionTarget.LOCAL_SU -> "su"
             ExecutionTarget.LOCAL_SH -> "sh"
             ExecutionTarget.CUSTOM -> "custom"
         }
@@ -93,19 +91,33 @@ class TerminalSessionManager(
         appendLine(LineType.COMMAND, "[$targetLabel] $effectiveCommand")
         _isBusy.value = true
 
+        val outputNormalizer = TerminalOutputNormalizer()
+        var outputFlushed = false
+        val onOutputChunk: (String) -> Unit = { chunk ->
+            appendChunkLines(LineType.STDOUT, outputNormalizer.feed(chunk))
+        }
+        fun flushOutput() {
+            if (!outputFlushed) {
+                appendChunkLines(LineType.STDOUT, outputNormalizer.finish())
+                outputFlushed = true
+            }
+        }
+
         activeExecutionJob = scope.launch(Dispatchers.IO) {
             try {
                 when (target) {
                     ExecutionTarget.ADB_SHELL -> {
                         val result = adbClient.execute(
                             command = effectiveCommand,
-                            onOutputChunk = { chunk ->
-                                appendChunkLines(LineType.STDOUT, chunk)
-                            }
+                            onOutputChunk = onOutputChunk
                         )
                         if (result.stderr.isNotBlank() && result.failure != null) {
-                            appendLine(LineType.STDERR, result.stderr)
+                            appendChunkLines(
+                                LineType.STDERR,
+                                TerminalOutputNormalizer.normalize(result.stderr)
+                            )
                         }
+                        flushOutput()
                         val exitText = if (result.isSuccess) {
                             "Process finished with exit code 0"
                         } else {
@@ -115,27 +127,25 @@ class TerminalSessionManager(
                         appendLine(LineType.EXIT_STATUS, exitText)
                     }
 
-                    ExecutionTarget.LOCAL_SU_ROOT,
-                    ExecutionTarget.LOCAL_SU,
                     ExecutionTarget.LOCAL_SH,
                     ExecutionTarget.CUSTOM -> {
                         val shellType = when (target) {
-                            ExecutionTarget.LOCAL_SU_ROOT -> LocalShellType.LOCAL_SU_ROOT
-                            ExecutionTarget.LOCAL_SU -> LocalShellType.LOCAL_SU
                             ExecutionTarget.LOCAL_SH -> LocalShellType.LOCAL_SH
-                            ExecutionTarget.CUSTOM,
-                            ExecutionTarget.ADB_SHELL -> LocalShellType.CUSTOM
+                            ExecutionTarget.CUSTOM -> LocalShellType.CUSTOM
+                            ExecutionTarget.ADB_SHELL -> LocalShellType.LOCAL_SH
                         }
                         val result = localShell.execute(
                             command = effectiveCommand,
                             shellType = shellType,
-                            onOutputChunk = { chunk ->
-                                appendChunkLines(LineType.STDOUT, chunk)
-                            }
+                            onOutputChunk = onOutputChunk
                         )
                         if (result.stderr.isNotBlank() && result.stdout.isEmpty()) {
-                            appendLine(LineType.STDERR, result.stderr)
+                            appendChunkLines(
+                                LineType.STDERR,
+                                TerminalOutputNormalizer.normalize(result.stderr)
+                            )
                         }
+                        flushOutput()
                         val exitText = if (result.isSuccess) {
                             "Process finished with exit code 0"
                         } else if (result.timedOut) {
@@ -152,6 +162,7 @@ class TerminalSessionManager(
             } catch (t: Throwable) {
                 appendLine(LineType.STDERR, "Execution error: ${t.message ?: "Unknown error"}")
             } finally {
+                flushOutput()
                 _isBusy.value = false
                 activeExecutionJob = null
                 executionMutex.unlock()

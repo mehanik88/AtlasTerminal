@@ -55,7 +55,7 @@ object TerminalColorizer {
 
     private fun formatCommandLine(text: String): AnnotatedString {
         return buildAnnotatedString {
-            // Check for [target] prefix e.g. [adb] or [su root]
+            // Check for [target] prefix e.g. [adb] or [sh]
             val bracketEnd = text.indexOf(']')
             if (text.startsWith("[") && bracketEnd > 0) {
                 val targetBadge = text.substring(0, bracketEnd + 1)
